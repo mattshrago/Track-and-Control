@@ -1,0 +1,106 @@
+\documentclass[12pt]{article}
+\title{Track and Control}
+\author{Robert Moss, Aaron Pereira, Matthew Shrago}
+\date{\today}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{gantt}
+\usepackage{tikz}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+
+This software will allow users to organize, manipulate, and manage their OS windows and other features by moving their head. The tracking module will take care of tracking and calculating the position of their head. While the windows manager module will supply the user with an assortment of features to help organize their operating system's real estate.
+
+Features include, a proportional snap to grid set up for users to place desired windows in five different locations. Namely, left, right, top, bottom, and middle. Once all the windows are selected, the middle window will fill the screen and the user will be able to "peer" in the direction of the four other windows to show a preview of them. This helps when the user is on a computer with a small screen, to truly maximize their space. Another feature would detect when the user is away from the screen, and with a user defined delay, put the computer to sleep, or simply turn off the display. Similarly to the window grid, the software can organize all open windows into a 3D view (with the illusion of layered windows) for the user to "look" around their desktop and see which window they want to select. It should be noted that all of these features will be activated with a user defined hot key. The modularity of the software allows us to easily update our tracking algorithm and include additional features.
+
+
+\section{Objectives}
+
+\subsection{Tracking Module (TM)}
+\begin{itemize}
+	\item Input: Raw camera data
+	\item Output: Coordinates of tracked object
+	\item Methods of approach
+	\begin{itemize}
+		\item{Color isolation}
+		\begin{itemize}
+			\item{HSV}
+			\item{RGB}
+			\item{Motion}
+		\end{itemize}
+	\end{itemize}
+	\begin{itemize}
+		\item{Infrared isolation}
+		\begin{itemize}
+			\item Infrared lights facing user
+			\item Reflection off iris
+		\end{itemize}
+		\item{Facial recognition}
+	\end{itemize}
+\end{itemize}	
+
+\subsection{Windows Controller Module (WCM)}
+\begin{itemize}
+	\item{Window Viewer (3D)}
+	\item{Window Grid Organizer}
+	\begin{itemize}
+		\item{Set Left, Right, Top, Bottom, and Middle windows.}
+	\end{itemize}
+	\item{Sleep Manager}
+	\begin{itemize}
+		\item{Off screen delay}
+		\item{Sleep or turn off screen (user setting)}
+	\end{itemize}
+\end{itemize}
+\textit{Note: All features are enabled with a user defined hot key.}
+
+
+\section{Resources}
+
+\subsection{Front-end}
+The tracking module (TM) will be written in C++ using the open source computer vision library, \href{http://opencv.org/}{\color{blue} OpenCV}. With this library, we'll be able to filter the tracked object in a variety ways. Either by it's RGB values (red, green, blue), HSV values (hue, saturation, value), or by motion. We can also combine different methods of object tracking to increase fidelity and decrease the uncertainty of the tracked object. The TM will take the raw camera feed as the input, update the current position of the tracked object, and output the coordinates of that object.
+
+The windows controller module (WCM) is the super-class for all subsequent features. It will be written in C++ and utilize the Windows.h header to easily execute system calls via the \href{http://msdn.microsoft.com/en-us/library/hh920508(v=vs.85).aspx}{\color{blue} Windows API}. The WCM will take the coordinates of the tracked object from the TM and process the specified feature.
+
+An interface will be needed in order for the user to customize and organize their Track and Control environment. The library \href{http://qt-project.org/}{\color{blue} QT C++} will be used to build a clean graphical user interface and the GUI will provide a way to change and save settings. Having all of the code written in C++ eases the compatibility within each module.
+
+\subsection{Back-end}
+A local SQLite database will store the user's settings for each feature. This will help structure the user's data in a low-maintenance, server-less, self-contained database.
+
+\section{Plan}
+\begin{gantt}{8}{13}
+	\begin{ganttitle}
+      \titleelement{1/8}{1}
+      \titleelement{1/17}{1}
+      \titleelement{2/7}{3}
+      \titleelement{2/21}{2}
+      \titleelement{3/7}{2}
+      \titleelement{3/28}{2}
+      \titleelement{4/14}{2}
+	\end{ganttitle}
+	\ganttbar[color=red]{Proposal}{0}{2}
+	\ganttbar{Software Reqmt. Spec. (SRS)}{2}{3}
+	\ganttbar{Software Design Desc. (SDD)}{5}{2}
+	\ganttbar{Object Design Doc. (ODD)}{7}{2}
+	\ganttbar{Design Prototype}{8}{3}
+	\ganttbar{Testing}{10}{2}
+	\ganttbar[color=blue]{Report/Presentation}{11}{2}
+	\node[fill=white,draw] at ([yshift=-12pt]current bounding box.south){
+{\color{red}Red} = current | {\color{blue} Blue} = final};
+\end{gantt}
+
+
+
+\end{document}
